@@ -12,6 +12,9 @@ import org.apache.calcite.jdbc.CalciteConnection;
 import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.SchemaPlus;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SchemaUtils {
 
     public static void init(String schemaName, Object targetSchema) throws SQLException, ClassNotFoundException {
@@ -34,10 +37,10 @@ public class SchemaUtils {
                     ;
                 try (ResultSet rs = statement.executeQuery(sql);) {
                     while (rs.next()) {
-                        System.out.println(rs.getString("deptno") + ", " + rs.getString("empid"));
+                        log.info("{}, {}", rs.getString("deptno"), rs.getString("empid"));
                     }
                 } catch (SQLException e) {
-                    System.err.print(e);
+                    log.error(e.getMessage(), e);
                     throw e;
                 }
             }

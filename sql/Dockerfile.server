@@ -1,0 +1,13 @@
+#FROM openjdk:8-jdk-alpine
+FROM alpine-java:base
+MAINTAINER Valeri Chibaev <shibaev.valera@gmail.com>
+
+ARG JAR_FILE=target/*.jar
+
+COPY ${JAR_FILE} /opt/app/app.jar
+RUN ls -al /opt/app/
+
+ENTRYPOINT ["/usr/bin/java"]
+CMD ["-jar", "/opt/app/app.jar"]
+VOLUME /var/lib/app/config
+EXPOSE 8080
