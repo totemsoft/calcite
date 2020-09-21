@@ -1,0 +1,45 @@
+# https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/html/common-application-properties.html
+
+# LOGGING
+logging:
+  file: ${logging_file:logs/service.log}
+  #config: classpath:log4j.xml
+  level:
+    root: ${logging_level:INFO}
+    com: WARN
+    net: WARN
+    org: WARN
+    au.com.totemsoft.calcite: ${logging_level:INFO}
+
+# ----------------------------------------
+# SECURITY PROPERTIES (SecurityProperties) Spring-Boot 2+
+# ----------------------------------------
+security:
+#  basic:
+#    enabled: true
+#    path: '/**'
+#  ignored: 
+#    - '/health/**'
+#  sessions: 'stateless'
+  user:
+    name: ${rest_username:user}
+    password: ${rest_password:password}
+
+# IDENTITY (ContextIdApplicationContextInitializer)
+spring:
+  application:
+    name: Apache Calcite SQL Service
+
+  # APPLICATION SETTINGS (SpringApplication)
+  # Run the application in a web environment (auto-detected by default).
+  main:
+    allow-bean-definition-overriding: true
+    web-environment: true
+
+# EMBEDDED SERVER CONFIGURATION (ServerProperties)
+server:
+  #address: localhost
+  port: ${server_port:8080}
+  servlet:
+    context-path: /
+  display-name: Apache Calcite SQL Service
