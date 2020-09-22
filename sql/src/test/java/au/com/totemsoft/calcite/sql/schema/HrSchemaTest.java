@@ -2,19 +2,30 @@ package au.com.totemsoft.calcite.sql.schema;
 
 import java.sql.SQLException;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import javax.sql.DataSource;
 
-//@RunWith(SpringRunner.class)
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import au.com.totemsoft.calcite.sql.Application;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(
+    classes = Application.class,
+    webEnvironment = SpringBootTest.WebEnvironment.NONE
+)
+@ActiveProfiles("test")
 class HrSchemaTest {
 
-    @BeforeEach
-    public void before() {
-        
-    }
+    @Autowired
+    private DataSource datasource;
 
     @Test
-    void init() throws SQLException, ClassNotFoundException {
+    public void init_ReflectiveSchema() throws SQLException, ClassNotFoundException {
         Employee[] employee = new Employee[] {
             new Employee("10000001", "IT"),
             new Employee("10000001", "HR"),
@@ -24,7 +35,13 @@ class HrSchemaTest {
             new Department("IT"),
             new Department("HR"),
         };
-        SchemaUtils.init("hr", new HrSchema(employee, department));
+        HrSchema target = new HrSchema(employee, department);
+        SchemaUtils.init(target);
+    }
+
+    //@Test // FIXME: Object 'employee' not found within 'hr'
+    public void init_JdbcSchemaH2() throws SQLException, ClassNotFoundException {
+        SchemaUtils.init(datasource);
     }
 
 }

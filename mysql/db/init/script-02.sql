@@ -1,4 +1,5 @@
-GRANT XA_RECOVER_ADMIN ON *.* TO 'calcite'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON *.* TO 'totemsoft'@'%';
+GRANT XA_RECOVER_ADMIN ON *.* TO 'totemsoft'@'%';
 
 FLUSH PRIVILEGES;
 
