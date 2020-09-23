@@ -16,6 +16,7 @@ services:
     - spring-cloud-network
     links:
     - mysql:mysql
+    - postgres:postgres
     volumes:
     - calcite-sql:/var/lib/app/config
     logging:
@@ -34,6 +35,20 @@ services:
       target: /docker-entrypoint-initdb.d/
     ports:
     - 3306:3306
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    env_file:
+    - postgres/env.list
+    volumes:
+    - type: bind # data storage
+      source: ./postgres/db/data/
+      target: /var/lib/postgresql/data
+    - type: bind # init database
+      source: ./postgres/db/init/
+      target: /docker-entrypoint-initdb.d/
+    ports:
+    - 5432:5432
 networks:
   spring-cloud-network:
     driver: bridge
