@@ -6,7 +6,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE IF NOT EXISTS department (
   deptno        VARCHAR(50) NOT NULL,
   created_date  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT department_pk PRIMARY KEY (deptno))
+  CONSTRAINT department_pk PRIMARY KEY (deptno)
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -20,7 +21,8 @@ CREATE TABLE IF NOT EXISTS employee (
   CONSTRAINT employee_pk PRIMARY KEY (empid, deptno),
   CONSTRAINT employee_fk1
     FOREIGN KEY (deptno)
-    REFERENCES department (deptno))
+    REFERENCES department (deptno)
+)
 ENGINE=InnoDB
 DEFAULT CHARACTER SET = utf8;
 
