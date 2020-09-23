@@ -5,8 +5,9 @@
 -- ----------------------------------------------------------------------------
 -- Table salary
 -- ----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS salary (
-  empid         VARCHAR(50) NOT NULL,
-  salary        DECIMAL(19,2) NOT NULL,
-  CONSTRAINT salary_pk PRIMARY KEY (empid)
-);
+INSERT INTO salary
+  (empid, salary)
+VALUES
+  ('100000001', 10000.00),
+  ('100000002', 20000.00)
+;

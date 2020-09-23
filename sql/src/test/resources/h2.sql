@@ -3,15 +3,13 @@ CREATE SCHEMA hrdb AUTHORIZATION sa;
 
 DROP TABLE IF EXISTS department;
 CREATE TABLE department (
-  deptno        VARCHAR(50) NOT NULL,
-  created_date  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
+  deptno        VARCHAR(50) NOT NULL
 );
 
 DROP TABLE IF EXISTS employee;
 CREATE TABLE IF NOT EXISTS employee (
   empid         VARCHAR(50) NOT NULL,
-  deptno        VARCHAR(50) NOT NULL,
-  created_date  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
+  deptno        VARCHAR(50) NOT NULL
 );
 
 INSERT INTO department

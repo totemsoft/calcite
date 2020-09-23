@@ -27,9 +27,9 @@ services:
     env_file:
     - mysql/env.list
     volumes:
-    - type: bind # data storage
-      source: ./mysql/db/data/
-      target: /var/lib/mysql/
+#     - type: bind # data storage
+#       source: ./mysql/db/data/
+#       target: /var/lib/mysql/
     - type: bind # init database
       source: ./mysql/db/init/
       target: /docker-entrypoint-initdb.d/
@@ -41,9 +41,9 @@ services:
     env_file:
     - postgres/env.list
     volumes:
-    - type: bind # data storage
-      source: ./postgres/db/data/
-      target: /var/lib/postgresql/data
+#     - type: bind # data storage
+#       source: ./postgres/db/data/
+#       target: /var/lib/postgresql/data
     - type: bind # init database
       source: ./postgres/db/init/
       target: /docker-entrypoint-initdb.d/
