@@ -8,7 +8,7 @@
         <artifactId>calcite</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>calcite-sql</artifactId>
+    <artifactId>calcite-core</artifactId>
     <packaging>jar</packaging>
  
     <name>Apache Calcite SQL</name>

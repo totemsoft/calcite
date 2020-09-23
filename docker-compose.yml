@@ -2,12 +2,12 @@
 version: '3.3'
 
 services:
-  calcite-sql:
-    container_name: calcite-sql
+  calcite-core:
+    container_name: calcite-core
     build:
-      context: ./sql
+      context: ./core
       dockerfile: Dockerfile.server
-    image: calcite-sql:latest
+    image: calcite-core:latest
     depends_on:
     - mysql
     ports: # HOST_PORT:CONTAINER_PORT
@@ -18,7 +18,7 @@ services:
     - mysql:mysql
     - postgres:postgres
     volumes:
-    - calcite-sql:/var/lib/app/config
+    - calcite-core:/var/lib/app/config
     logging:
       driver: json-file
   mysql:
@@ -53,5 +53,6 @@ networks:
   spring-cloud-network:
     driver: bridge
 volumes:
-  calcite-sql:
+  # docker volume create --name=calcite-core
+  calcite-core:
     external: true

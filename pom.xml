@@ -21,7 +21,7 @@
     <url>https://github.com/totemsoft/calcite</url>
 
     <modules>
-        <module>sql</module>
+        <module>core</module>
     </modules>
 
     <properties>
