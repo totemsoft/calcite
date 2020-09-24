@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import au.com.totemsoft.calcite.core.Application;
@@ -21,7 +22,7 @@ import javafx.util.Pair;
     classes = {Application.class, Config.class},
     webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
-//@ActiveProfiles("test")
+@ActiveProfiles("mysql")
 class JdbcMysqlSchemaTest {
 
     private final String sql = 
@@ -34,12 +35,12 @@ class JdbcMysqlSchemaTest {
         ;
 
     @Autowired @Qualifier("mysqlDatasource")
-    private DataSource mysqlDatasource;
+    private DataSource datasource;
 
     @Test
     public void init() throws SQLException, ClassNotFoundException {
         SchemaUtils.init(sql,
-            new Pair<Object, Map<String, String>>(mysqlDatasource, HrSchema.PROPERTIES)
+            new Pair<Object, Map<String, String>>(datasource, HrSchema.PROPERTIES)
         );
     }
 

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class Config {
 
-    @Profile("test")
+    @Profile("h2")
     @Bean("datasource")
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource datasource() {

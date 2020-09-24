@@ -24,7 +24,7 @@ import javafx.util.Pair;
     classes = {Application.class, Config.class},
     webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
-@ActiveProfiles("test")
+@ActiveProfiles("h2")
 class JdbcH2SchemaTest {
 
     // H2
