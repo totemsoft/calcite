@@ -29,11 +29,16 @@ security:
 spring:
   application:
     name: Apache Calcite SQL Service
-  datasource:
-    driver-class-name: ${datasource_driver:com.mysql.jdbc.Driver}
-    url: ${datasource_url:jdbc:mysql://localhost:3306/hrdb?serverTimezone=Australia/Brisbane}
-    username: ${datasource_username:totemsoft}
-    password: ${datasource_password:Passw0rd}
+  datasource-mysql:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: ${mysql_datasource_url:jdbc:mysql://localhost:3306/hrdb?serverTimezone=Australia/Brisbane}
+    username: ${mysql_datasource_username:totemsoft}
+    password: ${mysql_datasource_password:Passw0rd}
+  datasource-postgres:
+    driver-class-name: org.postgresql.Driver
+    url: ${postgres_datasource_url:jdbc:postgresql://localhost:5432/payroll}
+    username: ${postgres_datasource_username:totemsoft}
+    password: ${postgres_datasource_password:Passw0rd}
 
   # APPLICATION SETTINGS (SpringApplication)
   # Run the application in a web environment (auto-detected by default).

@@ -1,4 +1,4 @@
-package au.com.totemsoft.calcite.sql.rs;
+package au.com.totemsoft.calcite.core.rs;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;

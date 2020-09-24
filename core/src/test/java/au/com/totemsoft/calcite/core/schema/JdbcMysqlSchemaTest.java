@@ -1,20 +1,24 @@
-package au.com.totemsoft.calcite.sql.schema;
+package au.com.totemsoft.calcite.core.schema;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import au.com.totemsoft.calcite.sql.Application;
+import au.com.totemsoft.calcite.core.Application;
+import au.com.totemsoft.calcite.core.Config;
+import javafx.util.Pair;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-    classes = Application.class,
+    classes = {Application.class, Config.class},
     webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
 //@ActiveProfiles("test")
@@ -29,12 +33,14 @@ class JdbcMysqlSchemaTest {
         + " HAVING count(*) > 0"
         ;
 
-    @Autowired
-    private DataSource datasource;
+    @Autowired @Qualifier("mysqlDatasource")
+    private DataSource mysqlDatasource;
 
     @Test
     public void init() throws SQLException, ClassNotFoundException {
-        SchemaUtils.init(sql, datasource);
+        SchemaUtils.init(sql,
+            new Pair<Object, Map<String, String>>(mysqlDatasource, HrSchema.PROPERTIES)
+        );
     }
 
 }

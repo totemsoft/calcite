@@ -1,4 +1,4 @@
-package au.com.totemsoft.calcite.sql.schema.hr;
+package au.com.totemsoft.calcite.core.schema.hr;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

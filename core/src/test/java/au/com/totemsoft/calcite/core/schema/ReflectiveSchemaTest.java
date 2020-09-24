@@ -1,20 +1,21 @@
-package au.com.totemsoft.calcite.sql.schema;
+package au.com.totemsoft.calcite.core.schema;
 
 import java.sql.SQLException;
+import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import au.com.totemsoft.calcite.sql.Application;
-import au.com.totemsoft.calcite.sql.schema.hr.Department;
-import au.com.totemsoft.calcite.sql.schema.hr.Employee;
+import au.com.totemsoft.calcite.core.schema.hr.Department;
+import au.com.totemsoft.calcite.core.schema.hr.Employee;
+import javafx.util.Pair;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-    classes = Application.class,
     webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
 @ActiveProfiles("test")
@@ -29,8 +30,10 @@ class ReflectiveSchemaTest {
         + " HAVING count(*) > 0"
         ;
 
-    @Test
-    public void init() throws SQLException, ClassNotFoundException {
+    private HrSchema target;
+
+    @BeforeEach
+    public void before() {
         Employee[] employee = new Employee[] {
             new Employee("10000001", "IT"),
             new Employee("10000001", "HR"),
@@ -40,8 +43,14 @@ class ReflectiveSchemaTest {
             new Department("IT"),
             new Department("HR"),
         };
-        HrSchema target = new HrSchema(employee, department);
-        SchemaUtils.init(sql, target);
+        this.target = new HrSchema(employee, department);
+    }
+
+    @Test
+    public void init() throws SQLException, ClassNotFoundException {
+        SchemaUtils.init(sql,
+            new Pair<Object, Map<String, String>>(target, HrSchema.PROPERTIES)
+        );
     }
 
 }

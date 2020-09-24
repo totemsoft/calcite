@@ -1,4 +1,4 @@
-package au.com.totemsoft.calcite.sql;
+package au.com.totemsoft.calcite.core;
 
 import javax.sql.DataSource;
 
@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 
 @SpringBootApplication
 public class Application {
@@ -16,10 +15,15 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    @Primary
-    @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource datasource() {
+    @Bean("mysqlDatasource")
+    @ConfigurationProperties(prefix = "spring.datasource-mysql")
+    public DataSource mysqlDatasource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean("postgresDatasource")
+    @ConfigurationProperties(prefix = "spring.datasource-postgres")
+    public DataSource postgresDatasource() {
         return DataSourceBuilder.create().build();
     }
 

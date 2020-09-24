@@ -1,4 +1,4 @@
-package au.com.totemsoft.calcite.sql.rs;
+package au.com.totemsoft.calcite.core.rs;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;

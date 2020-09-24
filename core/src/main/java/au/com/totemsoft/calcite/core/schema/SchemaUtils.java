@@ -1,10 +1,11 @@
-package au.com.totemsoft.calcite.sql.schema;
+package au.com.totemsoft.calcite.core.schema;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -14,31 +15,37 @@ import org.apache.calcite.adapter.jdbc.JdbcSchema;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.SchemaPlus;
+import org.apache.commons.lang3.StringUtils;
 
+import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SchemaUtils {
 
-    public static void init(String sql, Object... targets) throws SQLException, ClassNotFoundException {
+    @SafeVarargs
+    public static void init(String sql, Pair<Object, Map<String, String>>... targets) throws SQLException, ClassNotFoundException {
         Class.forName(org.apache.calcite.jdbc.Driver.class.getName());
         Properties info = new Properties();
         info.setProperty("lex", "JAVA");
         try (Connection connection = DriverManager.getConnection("jdbc:calcite:", info);) {
             final CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
             final SchemaPlus rootSchema = calciteConnection.getRootSchema();
-            for (Object target : targets) {
+            for (Pair<Object, Map<String, String>> target : targets) {
+                final Object targetSchema = target.getKey();
+                final Map<String, String> targetProps = target.getValue();
+                final String name = targetProps.get("name");
                 final Schema schema;
-                if (target instanceof DataSource) {
-                    final DataSource dataSource = (DataSource) target;
-                    final String name = "hr";
-                    final String catalogName = null;
-                    final String schemaName = "hrdb";
+                if (targetSchema instanceof DataSource) {
+                    final DataSource dataSource = (DataSource) targetSchema;
+                    final String catalogName = StringUtils.trimToNull(targetProps.get("catalog"));
+                    final String schemaName = StringUtils.trimToNull(targetProps.get("schema"));
+                    log.info("{}: {}", name, schemaName);
                     schema = JdbcSchema.create(rootSchema, name, dataSource, catalogName, schemaName);
                 } else {
-                    schema = new ReflectiveSchema(target);
+                    schema = new ReflectiveSchema(targetSchema);
                 }
-                rootSchema.add("hr", schema);
+                rootSchema.add(name, schema);
             }
             execute(sql, calciteConnection);
         }
