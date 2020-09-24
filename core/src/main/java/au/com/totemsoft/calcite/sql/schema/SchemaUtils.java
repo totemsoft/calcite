@@ -20,37 +20,40 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SchemaUtils {
 
-    public static void init(Object target) throws SQLException, ClassNotFoundException {
+    public static void init(String sql, Object... targets) throws SQLException, ClassNotFoundException {
         Class.forName(org.apache.calcite.jdbc.Driver.class.getName());
         Properties info = new Properties();
         info.setProperty("lex", "JAVA");
         try (Connection connection = DriverManager.getConnection("jdbc:calcite:", info);) {
             final CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
             final SchemaPlus rootSchema = calciteConnection.getRootSchema();
-            final Schema schema;
-            if (target instanceof DataSource) {
-                schema = JdbcSchema.create(rootSchema, "hr", (DataSource) target, null, "hrdb");
-            } else {
-                schema = new ReflectiveSchema(target);
+            for (Object target : targets) {
+                final Schema schema;
+                if (target instanceof DataSource) {
+                    final DataSource dataSource = (DataSource) target;
+                    final String name = "hr";
+                    final String catalogName = null;
+                    final String schemaName = "hrdb";
+                    schema = JdbcSchema.create(rootSchema, name, dataSource, catalogName, schemaName);
+                } else {
+                    schema = new ReflectiveSchema(target);
+                }
+                rootSchema.add("hr", schema);
             }
-            rootSchema.add("hr", schema);
-            execute(calciteConnection, schema);
+            execute(sql, calciteConnection);
         }
     }
 
-    public static void execute(CalciteConnection calciteConnection, Schema schema) throws SQLException {
-        final String sql = 
-            "SELECT"
-            + " d.deptno deptno, max(e.empid) empid"
-            + " FROM hr.employee e"
-            + " JOIN hr.department d ON e.deptno = d.deptno"
-            + " GROUP BY d.deptno"
-            + " HAVING count(*) > 0"
-            ;
+    public static void execute(String sql, CalciteConnection calciteConnection) throws SQLException {
         try (Statement statement = calciteConnection.createStatement();) {
             try (ResultSet rs = statement.executeQuery(sql);) {
                 while (rs.next()) {
-                    log.info("{}, {}", rs.getString("deptno"), rs.getString("empid"));
+                    final int count = rs.getMetaData().getColumnCount();
+                    if (count == 2) {
+                        log.info("{}, {}", rs.getObject(1), rs.getObject(2));
+                    } else {
+                        log.info("{}", rs.getObject(1));
+                    }
                 }
             } catch (SQLException e) {
                 log.error(e.getMessage(), e);

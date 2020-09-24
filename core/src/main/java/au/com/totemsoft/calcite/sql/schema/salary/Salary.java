@@ -1,4 +1,6 @@
-package au.com.totemsoft.calcite.sql.schema;
+package au.com.totemsoft.calcite.sql.schema.salary;
+
+import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,10 +13,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Employee {
+public class Salary {
 
     public final String empid;
 
-    public final String deptno;
+    public final BigDecimal salary;
 
 }
