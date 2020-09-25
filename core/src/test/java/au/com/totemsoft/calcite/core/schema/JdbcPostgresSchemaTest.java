@@ -32,12 +32,12 @@ class JdbcPostgresSchemaTest {
         ;
 
     @Autowired @Qualifier("postgresDatasource")
-    private DataSource datasource;
+    private DataSource postgresDatasource;
 
     @Test
-    public void init() throws SQLException, ClassNotFoundException {
+    public void init() throws SQLException {
         SchemaUtils.init(sql,
-            new Pair<Object, Map<String, String>>(datasource, PayrollSchema.PROPERTIES)
+            new Pair<Object, Map<String, String>>(postgresDatasource, PayrollSchema.PROPERTIES)
         );
     }
 

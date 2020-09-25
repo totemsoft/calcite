@@ -24,8 +24,8 @@ class ReflectiveSchemaTest {
     private final String sql = 
         "SELECT"
         + " d.deptno deptno, max(e.empid) empid"
-        + " FROM hr.employee e"
-        + " JOIN hr.department d ON e.deptno = d.deptno"
+        + " FROM hr.department d"
+        + " JOIN hr.employee e ON d.deptno = e.deptno"
         + " GROUP BY d.deptno"
         + " HAVING count(*) > 0"
         ;
@@ -47,7 +47,7 @@ class ReflectiveSchemaTest {
     }
 
     @Test
-    public void init() throws SQLException, ClassNotFoundException {
+    public void init() throws SQLException {
         SchemaUtils.init(sql,
             new Pair<Object, Map<String, String>>(target, HrSchema.PROPERTIES)
         );

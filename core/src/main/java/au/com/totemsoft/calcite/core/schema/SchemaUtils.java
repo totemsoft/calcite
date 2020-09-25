@@ -23,12 +23,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SchemaUtils {
 
+    private static final Properties INFO = new Properties();
+    static {
+        INFO.setProperty("lex", "JAVA");
+    }
+
     @SafeVarargs
-    public static void init(String sql, Pair<Object, Map<String, String>>... targets) throws SQLException, ClassNotFoundException {
-        Class.forName(org.apache.calcite.jdbc.Driver.class.getName());
-        Properties info = new Properties();
-        info.setProperty("lex", "JAVA");
-        try (Connection connection = DriverManager.getConnection("jdbc:calcite:", info);) {
+    public static void init(String sql, Pair<Object, Map<String, String>>... targets) throws SQLException {
+        //Class.forName(org.apache.calcite.jdbc.Driver.class.getName());
+        try (Connection connection = DriverManager.getConnection("jdbc:calcite:", INFO);) {
             final CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
             final SchemaPlus rootSchema = calciteConnection.getRootSchema();
             for (Pair<Object, Map<String, String>> target : targets) {
@@ -40,7 +43,7 @@ public class SchemaUtils {
                     final DataSource dataSource = (DataSource) targetSchema;
                     final String catalogName = StringUtils.trimToNull(targetProps.get("catalog"));
                     final String schemaName = StringUtils.trimToNull(targetProps.get("schema"));
-                    log.info("{}: {}", name, schemaName);
+                    log.info("{}: catalog={}, schema={}", name, catalogName, schemaName);
                     schema = JdbcSchema.create(rootSchema, name, dataSource, catalogName, schemaName);
                 } else {
                     schema = new ReflectiveSchema(targetSchema);
@@ -56,7 +59,9 @@ public class SchemaUtils {
             try (ResultSet rs = statement.executeQuery(sql);) {
                 while (rs.next()) {
                     final int count = rs.getMetaData().getColumnCount();
-                    if (count == 2) {
+                    if (count == 3) {
+                        log.info("{}, {}, {}", rs.getObject(1), rs.getObject(2), rs.getObject(3));
+                    } else if (count == 2) {
                         log.info("{}, {}", rs.getObject(1), rs.getObject(2));
                     } else {
                         log.info("{}", rs.getObject(1));

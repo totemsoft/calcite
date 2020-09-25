@@ -22,14 +22,15 @@ import javafx.util.Pair;
     classes = {Application.class, Config.class},
     webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
-@ActiveProfiles("mysql")
-class JdbcMysqlSchemaTest {
+@ActiveProfiles({"mysql", "postgres"})
+class JdbcCompositeSchemaTest {
 
     private final String sql = 
         "SELECT"
-        + " d.deptno deptno, max(e.empid) empid"
+        + " d.deptno deptno, max(e.empid) empid, max(s.salary) salary"
         + " FROM hr.department d"
         + " JOIN hr.employee e ON d.deptno = e.deptno"
+        + " JOIN pr.salary s ON e.empid = s.empid"
         + " GROUP BY d.deptno"
         + " HAVING count(*) > 0"
         ;
@@ -37,10 +38,14 @@ class JdbcMysqlSchemaTest {
     @Autowired @Qualifier("mysqlDatasource")
     private DataSource mysqlDatasource;
 
+    @Autowired @Qualifier("postgresDatasource")
+    private DataSource postgresDatasource;
+
     @Test
     public void init() throws SQLException {
         SchemaUtils.init(sql,
-            new Pair<Object, Map<String, String>>(mysqlDatasource, HrSchema.PROPERTIES)
+            new Pair<Object, Map<String, String>>(mysqlDatasource, HrSchema.PROPERTIES),
+            new Pair<Object, Map<String, String>>(postgresDatasource, PayrollSchema.PROPERTIES)
         );
     }
 

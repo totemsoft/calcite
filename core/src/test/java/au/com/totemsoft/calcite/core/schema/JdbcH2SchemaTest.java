@@ -37,8 +37,8 @@ class JdbcH2SchemaTest {
     private final String sql = 
         "SELECT"
         + " d.deptno deptno, max(e.empid) empid"
-        + " FROM hr.employee e"
-        + " JOIN hr.department d ON e.deptno = d.deptno"
+        + " FROM hr.department d"
+        + " JOIN hr.employee e ON d.deptno = e.deptno"
         + " GROUP BY d.deptno"
         + " HAVING count(*) > 0"
         ;
@@ -46,8 +46,8 @@ class JdbcH2SchemaTest {
     @Autowired
     private DataSource datasource;
 
-    @Test // FIXME: Object 'employee' not found within 'hr'
-    public void init() throws SQLException, ClassNotFoundException {
+    @Test
+    public void init() throws SQLException {
         SchemaUtils.init(sql,
             new Pair<Object, Map<String, String>>(datasource, PROPERTIES)
         );
